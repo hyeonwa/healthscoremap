@@ -191,31 +191,40 @@
             const coords = new kakao.maps.LatLng(res[0].y, res[0].x);
             const distance = kakao.maps.geometry.spherical.computeDistanceBetween(userCoords, coords);
 
-      if (distance <= 1000) {
-  const marker = new kakao.maps.Marker({
-    map,
-    position: coords,
-    title: address
-  });
-  markers.push(marker);
+             if (distance <= 1000) {
+          const marker = new kakao.maps.Marker({
+            map,
+            position: coords,
+            title: address
+          });
+          markers.push(marker);
 
-  const infowindow = new kakao.maps.InfoWindow({
-    content: `<div style="padding:5px; font-size:14px;">${address}</div>`
-  });
+          const infowindow = new kakao.maps.InfoWindow({
+            content: `<div style="padding:5px; font-size:14px;">${address}</div>`
+          });
 
-  kakao.maps.event.addListener(marker, 'mouseover', function() {
-    infowindow.open(map, marker);
-  });
-  kakao.maps.event.addListener(marker, 'mouseout', function() {
-    infowindow.close();
-  });
+          kakao.maps.event.addListener(marker, 'mouseover', function() {
+            infowindow.open(map, marker);
+          });
+          kakao.maps.event.addListener(marker, 'mouseout', function() {
+            infowindow.close();
+          });
 
-  found++;
+          found++;
+        }
+      }); // <-- addressSearch의 내부 콜백 닫음
+    });   // <-- forEach 닫음
+
+    // 결과 표시
+    setTimeout(() => {
+      document.getElementById('info').innerText =
+        `반경 1km 내 ${category === 'hospital' ? '병원'
+        : category === 'sports' ? '공공체육시설'
+        : '공원 및 녹지'}: ${found}곳`;
+    }, 500);  // 비동기 처리 지연 고려
+
+  });  // <-- 사용자의 주소 검색 함수 닫음
 }
-        });
-      });
-    });
-  }
 </script>
 
 </body>
